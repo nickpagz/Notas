@@ -1,0 +1,51 @@
+<?php
+/**
+ * Title: Sidebar Grouped Posts
+ * Slug: notas/sidebar-grouped-posts
+ * Categories: notas
+ * Inserter: no
+ *
+ * Posts are loaded via AJAX with infinite scroll for better performance
+ *
+ * @package Notas
+ */
+?>
+
+<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|40"}},"layout":{"type":"flex","orientation":"vertical"}} -->
+<div class="wp-block-group">
+
+	<!-- Site Title -->
+	<!-- wp:site-title {"level":2,"style":{"typography":{"fontSize":"1.5rem","fontWeight":"700"}}} /-->
+
+	<!-- wp:spacer {"height":"var:preset|spacing|30"} -->
+	<div style="height:var(--wp--preset--spacing--30)" aria-hidden="true" class="wp-block-spacer"></div>
+	<!-- /wp:spacer -->
+
+	<!-- Search Field -->
+	<div class="notas-search-container" style="position:relative">
+		<input type="search" id="notas-search-input" class="notas-search-input" placeholder="<?php esc_attr_e( 'Search posts...', 'notas' ); ?>" style="width:100%;padding:var(--wp--preset--spacing--30);border:1px solid var(--wp--preset--color--border);border-radius:8px;font-size:0.9375rem;font-family:var(--wp--preset--font-family--system);background:var(--wp--preset--color--base);color:var(--wp--preset--color--contrast)" />
+		<span class="notas-search-spinner" style="display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--wp--preset--color--secondary)">🔍</span>
+	</div>
+
+	<!-- wp:spacer {"height":"var:preset|spacing|20"} -->
+	<div style="height:var(--wp--preset--spacing--20)" aria-hidden="true" class="wp-block-spacer"></div>
+	<!-- /wp:spacer -->
+
+	<!-- Posts Container (loaded via AJAX) -->
+	<div id="notas-posts-container">
+		<!-- Posts will be loaded here via JavaScript -->
+	</div>
+	<!-- /notas-posts-container -->
+
+	<!-- Loading Indicator -->
+	<div id="notas-loading-indicator" style="display:none;text-align:center;padding:var(--wp--preset--spacing--40);color:var(--wp--preset--color--secondary);font-size:0.875rem">
+		Loading more posts...
+	</div>
+
+	<!-- End Message -->
+	<div id="notas-end-message" style="display:none;text-align:center;padding:var(--wp--preset--spacing--40);color:var(--wp--preset--color--secondary);font-size:0.875rem">
+		No more posts to load
+	</div>
+
+</div>
+<!-- /wp:group -->

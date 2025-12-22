@@ -1,0 +1,320 @@
+/**
+ * Notas Theme Custom Styles
+ *
+ * Handles sidebar interactivity, current post highlighting, and mobile responsiveness
+ */
+
+/* ============================================
+   FULL WIDTH LAYOUT
+   ============================================ */
+
+/* Establish height constraint chain starting from html */
+html {
+	height: 100vh !important;
+}
+
+/* Prevent body scroll - columns handle their own scrolling */
+body {
+	overflow: hidden !important;
+	height: 100% !important;
+}
+
+/* Account for WordPress admin bar */
+body.admin-bar {
+	height: calc(100vh - 32px) !important;
+}
+
+/* Main container fills viewport */
+main.wp-block-group {
+	height: 100% !important;
+	overflow: hidden !important;
+	max-height: 100vh !important;
+}
+
+body.admin-bar main.wp-block-group {
+	max-height: calc(100vh - 32px) !important;
+}
+
+/* Columns container fills viewport */
+.wp-block-columns {
+	height: 100% !important;
+	max-height: 100vh !important;
+	min-height: 0 !important;
+	display: flex !important;
+	overflow: hidden !important;
+	flex-wrap: nowrap !important;
+}
+
+body.admin-bar .wp-block-columns {
+	max-height: calc(100vh - 32px) !important;
+}
+
+/* ============================================
+   SEARCH INPUT
+   ============================================ */
+
+.notas-search-input {
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.notas-search-input:focus {
+	outline: none;
+	border-color: var(--wp--preset--color--accent) !important;
+	box-shadow: 0 0 0 3px rgba(255, 149, 0, 0.1);
+}
+
+.notas-search-input::placeholder {
+	color: var(--wp--preset--color--secondary);
+	opacity: 0.6;
+}
+
+/* ============================================
+   POST LIST ITEM HOVER STATES
+   ============================================ */
+
+.note-list-item {
+	transition: background-color 0.2s ease;
+	cursor: pointer;
+}
+
+.note-list-item:hover {
+	background-color: var(--wp--preset--color--border);
+}
+
+.note-list-item .note-title a {
+	transition: color 0.2s ease;
+}
+
+/* ============================================
+   CURRENT POST HIGHLIGHTING
+   ============================================ */
+
+.note-list-item.is-current-post {
+	background-color: var(--wp--preset--color--accent);
+}
+
+/* ============================================
+   HOMEPAGE POST STYLING TO MATCH SINGLE
+   Make homepage post spacing match single template
+   Apply .is-layout-flow spacing to all child elements
+   ============================================ */
+
+.wp-block-query .wp-block-post-template > li > * {
+	margin-block-start: 24px;
+	margin-block-end: 0;
+}
+
+.note-list-item.is-current-post .note-title a {
+	color: #FFFFFF !important;
+}
+
+.note-list-item.is-current-post time,
+.note-list-item.is-current-post span {
+	color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* ============================================
+   DESKTOP LAYOUT (SIDE-BY-SIDE COLUMNS)
+   Only apply above mobile breakpoint
+   ============================================ */
+
+@media (min-width: 782px) {
+
+	/* ============================================
+	   SIDEBAR STICKY BEHAVIOR
+	   ============================================ */
+
+	.wp-block-columns > .wp-block-column:first-child {
+		max-width: 400px !important;
+		min-width: 280px !important;
+		flex: 0 1 400px !important;
+		align-self: stretch !important;
+		min-height: 0 !important;
+		overflow-y: auto !important;
+		overflow-x: hidden !important;
+	}
+
+	/* ============================================
+	   POST CONTENT INDEPENDENT SCROLLING
+	   ============================================ */
+
+	.wp-block-columns > .wp-block-column:last-child {
+		flex: 1 1 auto !important;
+		align-self: stretch !important;
+		min-height: 0 !important;
+		overflow-y: auto !important;
+		overflow-x: hidden !important;
+	}
+
+}
+
+/* ============================================
+   CUSTOM SCROLLBAR (WEBKIT)
+   ============================================ */
+
+.wp-block-columns > .wp-block-column::-webkit-scrollbar {
+	width: 8px;
+}
+
+.wp-block-columns > .wp-block-column::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.wp-block-columns > .wp-block-column::-webkit-scrollbar-thumb {
+	background-color: var(--wp--preset--color--border);
+	border-radius: 4px;
+}
+
+.wp-block-columns > .wp-block-column::-webkit-scrollbar-thumb:hover {
+	background-color: var(--wp--preset--color--secondary);
+}
+
+/* ============================================
+   MOBILE BACK LINK (HIDDEN ON DESKTOP)
+   ============================================ */
+
+.mobile-back-link {
+	display: none;
+}
+
+.mobile-back-link a {
+	color: var(--wp--preset--color--accent);
+	text-decoration: none;
+	font-weight: 600;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN: MOBILE
+   ============================================ */
+
+@media (max-width: 781px) {
+
+	/* Restore body scroll on mobile */
+	body {
+		overflow: visible;
+		height: auto;
+	}
+
+	body.admin-bar {
+		height: auto;
+	}
+
+	/* Show back link on mobile */
+	.mobile-back-link {
+		display: block;
+	}
+
+	/* Two-column container for slide transitions */
+	.wp-block-columns {
+		display: flex;
+		width: 200vw;
+		height: auto;
+		transition: transform 0.3s ease;
+		flex-wrap: nowrap;
+		overflow-x: hidden;
+	}
+
+	/* Default state: show sidebar (list view) */
+	body:not(.single):not(.page) .wp-block-columns {
+		transform: translateX(0);
+	}
+
+	/* Single/page state: show content (slide left) */
+	body.single .wp-block-columns,
+	body.page .wp-block-columns {
+		transform: translateX(-100vw);
+	}
+
+	/* Sidebar column: full viewport width on mobile */
+	.wp-block-columns > .wp-block-column:first-child {
+		width: 100vw !important;
+		flex-basis: 100vw !important;
+		min-width: 100vw;
+		max-width: none;
+		max-height: 100vh;
+		height: auto;
+		overflow-y: auto;
+		position: relative;
+		border-right: none !important;
+		padding-left: var(--wp--preset--spacing--40) !important;
+		padding-right: var(--wp--preset--spacing--40) !important;
+		box-sizing: border-box !important;
+	}
+
+	/* Content column: full viewport width on mobile */
+	.wp-block-columns > .wp-block-column:last-child {
+		width: 100vw !important;
+		flex-basis: 100vw !important;
+		min-width: 100vw;
+		height: auto;
+		padding-left: var(--wp--preset--spacing--40) !important;
+		padding-right: var(--wp--preset--spacing--40) !important;
+		box-sizing: border-box !important;
+	}
+
+	/* Group headers smaller on mobile */
+	.note-list-item h3 {
+		font-size: 0.625rem;
+	}
+
+	/* Note items slightly smaller padding on mobile */
+	.note-list-item {
+		padding: var(--wp--preset--spacing--20) !important;
+	}
+
+}
+
+/* ============================================
+   RESPONSIVE DESIGN: TABLET
+   ============================================ */
+
+@media (min-width: 782px) and (max-width: 1024px) {
+
+	/* Narrower sidebar on tablets */
+	.wp-block-columns > .wp-block-column:first-child {
+		flex: 0 1 340px;
+		max-width: 340px;
+		min-width: 280px;
+	}
+
+}
+
+/* ============================================
+   RESPONSIVE DESIGN: INTERMEDIATE DESKTOP
+   ============================================ */
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+
+	/* Intermediate sidebar width for smaller desktop screens */
+	.wp-block-columns > .wp-block-column:first-child {
+		flex: 0 1 360px;
+		max-width: 360px;
+		min-width: 300px;
+	}
+
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+
+	/* Hide sidebar when printing */
+	.wp-block-columns > .wp-block-column:first-child {
+		display: none;
+	}
+
+	/* Content full width */
+	.wp-block-columns > .wp-block-column:last-child {
+		width: 100% !important;
+		max-width: 100% !important;
+		flex-basis: 100% !important;
+	}
+
+	/* Hide mobile back link */
+	.mobile-back-link {
+		display: none;
+	}
+
+}
