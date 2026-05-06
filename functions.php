@@ -85,7 +85,7 @@ if ( ! function_exists( 'notas_search_posts_ajax' ) ) :
 			'offset'         => $offset,
 			'post_type'      => 'post',
 			'post_status'    => 'publish',
-			'orderby'        => 'date',
+			'orderby'        => 'modified',
 			'order'          => 'DESC',
 		);
 
@@ -130,7 +130,7 @@ if ( ! function_exists( 'notas_search_posts_ajax' ) ) :
 		);
 
 		foreach ( $posts as $post ) {
-			$post_time = get_post_time( 'U', false, $post );
+			$post_time = get_post_modified_time( 'U', false, $post );
 			$diff_days = floor( ( $now - $post_time ) / DAY_IN_SECONDS );
 
 			if ( $diff_days === 0 ) {
@@ -209,3 +209,41 @@ if ( ! function_exists( 'notas_search_posts_ajax' ) ) :
 endif;
 add_action( 'wp_ajax_notas_search_posts', 'notas_search_posts_ajax' );
 add_action( 'wp_ajax_nopost_notas_search_posts', 'notas_search_posts_ajax' );
+
+/**
+ * Parent Post Meta Field
+ *
+ * Registers a post meta field that allows associating a parent post.
+ */
+if ( ! function_exists( 'notas_register_parent_post_meta' ) ) :
+	function notas_register_parent_post_meta() {
+		register_post_meta(
+			'post',
+			'_notas_parent_post',
+			array(
+				'show_in_rest'  => true,
+				'single'        => true,
+				'type'          => 'integer',
+				'default'       => 0,
+				'auth_callback' => function () {
+					return current_user_can( 'edit_posts' );
+				},
+			)
+		);
+	}
+endif;
+add_action( 'init', 'notas_register_parent_post_meta' );
+
+// Enqueue the editor sidebar plugin for parent post selection
+if ( ! function_exists( 'notas_enqueue_editor_assets' ) ) :
+	function notas_enqueue_editor_assets() {
+		wp_enqueue_script(
+			'notas-parent-post-plugin',
+			get_template_directory_uri() . '/assets/js/parent-post-plugin.js',
+			array( 'wp-plugins', 'wp-edit-post', 'wp-components', 'wp-data', 'wp-element', 'wp-compose', 'wp-api-fetch' ),
+			wp_get_theme()->get( 'Version' ),
+			true
+		);
+	}
+endif;
+add_action( 'enqueue_block_editor_assets', 'notas_enqueue_editor_assets' );
